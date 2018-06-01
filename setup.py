@@ -203,8 +203,6 @@ def init_env(
     cflags = shlex.split(cflags) + shlex.split(
         sysconfig.get_config_var('CCSHARED')
     )
-    if is_travis and 'SW' in os.environ:
-        cflags.append('-I{}/include'.format(os.environ['SW']))
     ldflags = os.environ.get(
         'OVERRIDE_LDFLAGS',
         '-Wall ' + ' '.join(sanitize_args) + ('' if debug else ' -O3')
@@ -223,8 +221,6 @@ def init_env(
         cflags.append('-g3')
         ldflags.append('-lprofiler')
     ldpaths = []
-    if is_travis and 'SW' in os.environ:
-        ldpaths.append('-L{}/lib'.format(os.environ['SW']))
     return Env(cc, cppflags, cflags, ldflags, ldpaths=ldpaths)
 
 

@@ -7,6 +7,14 @@ matrix:
           language: python
           sudo: false
           env: USE_BUNDLE=1 SW=$HOME/sw PKG_CONFIG_PATH=$SW/lib/pkgconfig LD_LIBRARY_PATH=$SW/lib PYTHON=$SW/bin/python3
+          addons:
+            apt:
+              packages:
+                - libxi-dev
+                - libxrandr-dev
+                - libxinerama-dev
+                - libxcursor-dev
+                - libxcb-xkb-dev
 
         - os: linux
           dist: trusty
@@ -102,7 +110,7 @@ install: |
         if [[ "$USE_BUNDLE" == "1" ]]; then
             mkdir -p $SW;
             curl https://download.calibre-ebook.com/travis/kitty/linux-64.tar.xz | tar xJ -C $SW;
-            find $SW -type f -name '*.pc' -exec sed -i 's,/sw/sw,/home/travis/sw,g' {} \;;
+            find $SW -type f -name '*.pc' -exec sed -i "s,/sw/sw,$SW,g" {} \;;
             cat $SW/lib/pkgconfig/harfbuzz.pc;
         else
             pushd /tmp
