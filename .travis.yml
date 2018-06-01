@@ -102,6 +102,8 @@ install: |
         if [[ "$USE_BUNDLE" == "1" ]]; then
             mkdir -p $SW;
             curl https://download.calibre-ebook.com/travis/kitty/linux-64.tar.xz | tar xJ -C $SW;
+            find $SW -type f -name '*.pc' -exec sed -i 's,/sw/sw,/home/travis/sw,g' {} \;;
+            cat $SW/lib/pkgconfig/harfbuzz.pc;
         else
             pushd /tmp
             wget --no-check-certificate http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
