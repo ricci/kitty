@@ -113,7 +113,7 @@ install: |
             find $SW -type f -name '*.pc' -exec sed -i "s,/sw/sw,$SW,g" {} \;;
             find $SW -type f -name '_sysconfig*.py' -exec sed -i "s,/sw/sw,$SW,g" {} \;;
             cat $SW/lib/pkgconfig/harfbuzz.pc;
-            cat lib/python3.6/_sysconfigdata_m_linux_x86_64-linux-gnu.py;
+            cat $SW/lib/python3.6/_sysconfigdata_m_linux_x86_64-linux-gnu.py;
         else
             pushd /tmp
             wget --no-check-certificate http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
