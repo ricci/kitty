@@ -162,7 +162,7 @@ class Env:
         self.cc, self.cppflags, self.cflags, self.ldflags, self.ldpaths = cc, cppflags, cflags, ldflags, ldpaths
 
     def copy(self):
-        return Env(self.cc, list(self.cppflags), list(self.cflags), list(self.ldflags), list(self.ldflags))
+        return Env(self.cc, list(self.cppflags), list(self.cflags), list(self.ldflags), list(self.ldpaths))
 
 
 def init_env(
@@ -203,6 +203,8 @@ def init_env(
     cflags = shlex.split(cflags) + shlex.split(
         sysconfig.get_config_var('CCSHARED')
     )
+    if is_travis and 'SW' in os.environ:
+        cflags.append('-I{}/include'.format(os.environ['SW']))
     ldflags = os.environ.get(
         'OVERRIDE_LDFLAGS',
         '-Wall ' + ' '.join(sanitize_args) + ('' if debug else ' -O3')
@@ -220,7 +222,10 @@ def init_env(
         cppflags.append('-DWITH_PROFILER')
         cflags.append('-g3')
         ldflags.append('-lprofiler')
-    return Env(cc, cppflags, cflags, ldflags)
+    ldpaths = []
+    if is_travis and 'SW' in os.environ:
+        ldpaths.append('-L{}/lib'.format(os.environ['SW']))
+    return Env(cc, cppflags, cflags, ldflags, ldpaths=ldpaths)
 
 
 def kitty_env():
@@ -247,9 +252,6 @@ def kitty_env():
     ans.ldpaths += pylib + font_libs + gl_libs + libpng
     if is_macos:
         ans.ldpaths.extend('-framework Cocoa'.split())
-        if is_travis and 'SW' in os.environ:
-            cflags.append('-I{}/include'.format(os.environ['SW']))
-            ans.ldpaths.append('-L{}/lib'.format(os.environ['SW']))
     else:
         ans.ldpaths += ['-lrt']
         if '-ldl' not in ans.ldpaths:
