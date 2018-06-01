@@ -36,7 +36,6 @@ version = tuple(
 )
 _plat = sys.platform.lower()
 is_macos = 'darwin' in _plat
-is_travis = os.environ.get('TRAVIS') == 'true'
 env = None
 
 PKGCONFIG = os.environ.get('PKGCONFIG_EXE', 'pkg-config')
